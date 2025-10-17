@@ -11,11 +11,9 @@ export class MotorController {
             direction: 'forward' // 'forward' or 'reverse'
         };
         
-        // MQTT Topics - using unique identifier to avoid conflicts
+        // MQTT Topics - using single topic for all motor data
         this.topics = {
-            speed: 'akuri/motor/speed',
-            state: 'akuri/motor/state',
-            direction: 'akuri/motor/direction',
+            motor: 'akuri/motor/control',  // Single topic for all motor data
             status: 'akuri/motor/status',
             log: 'akuri/motor/log'
         };
@@ -240,7 +238,7 @@ export class MotorController {
         this.updateUI();
         
         if (this.isConnected) {
-            this.publishSpeed();
+            this.publishMotorState();
         }
         
         this.addLogEntry(`Speed set to ${this.motorState.speed}%`);
@@ -263,33 +261,11 @@ export class MotorController {
         this.updateUI();
         
         if (this.isConnected) {
-            this.publishDirection();
+            this.publishMotorState();
         }
         
         const direction = this.motorState.direction.toUpperCase();
         this.addLogEntry(`Direction changed to ${direction}`);
-    }
-
-    publishSpeed() {
-        if (!this.client || !this.isConnected) return;
-
-        const message = JSON.stringify({
-            speed: this.motorState.speed,
-            timestamp: new Date().toISOString()
-        });
-
-        this.client.publish(this.topics.speed, message, 0, false);
-    }
-
-    publishDirection() {
-        if (!this.client || !this.isConnected) return;
-
-        const message = JSON.stringify({
-            direction: this.motorState.direction,
-            timestamp: new Date().toISOString()
-        });
-
-        this.client.publish(this.topics.direction, message, 0, false);
     }
 
     publishMotorState() {
@@ -302,7 +278,7 @@ export class MotorController {
             timestamp: new Date().toISOString()
         });
 
-        this.client.publish(this.topics.state, message, 0, false);
+        this.client.publish(this.topics.motor, message, 0, false);
     }
 
     updateUI() {
