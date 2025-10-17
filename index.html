@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Control Panel</title>
+    <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Motor Control Panel</h1>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="statusText">Disconnected</span>
+            </div>
+        </header>
+
+        <main class="control-panel">
+            <!-- Motor Speed Control -->
+            <div class="control-section">
+                <h2>Speed Control</h2>
+                <div class="speed-control">
+                    <label for="speedSlider">Motor Speed: <span id="speedValue">0</span>%</label>
+                    <input 
+                        type="range" 
+                        id="speedSlider" 
+                        min="0" 
+                        max="100" 
+                        value="0" 
+                        step="1"
+                        class="speed-slider"
+                    >
+                    <div class="speed-labels">
+                        <span>0%</span>
+                        <span>50%</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motor On/Off Control -->
+            <div class="control-section">
+                <h2>Motor State</h2>
+                <div class="power-control">
+                    <button id="powerButton" class="power-button off">
+                        <span class="button-text">Turn On</span>
+                        <span class="button-icon">⚡</span>
+                    </button>
+                    <div class="power-status">
+                        <span id="powerStatus">Motor: OFF</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motor Direction Control -->
+            <div class="control-section">
+                <h2>Direction Control</h2>
+                <div class="direction-control">
+                    <button id="directionButton" class="direction-button forward">
+                        <span class="button-text">Forward</span>
+                        <span class="button-icon">▶️</span>
+                    </button>
+                    <div class="direction-status">
+                        <span id="directionStatus">Direction: FORWARD</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MQTT Settings -->
+            <div class="control-section">
+                <h2>MQTT Settings</h2>
+                <div class="mqtt-settings">
+                    <div class="input-group">
+                        <label for="brokerUrl">Broker URL:</label>
+                        <input type="text" id="brokerUrl" value="ws://broker.hivemq.com:8000" placeholder="ws://broker.hivemq.com:8000">
+                    </div>
+                    <div class="input-group">
+                        <label for="clientId">Client ID:</label>
+                        <input type="text" id="clientId" value="motor-control-web" placeholder="motor-control-web">
+                    </div>
+                    <button id="connectButton" class="connect-button">Connect to MQTT</button>
+                </div>
+            </div>
+
+            <!-- Status Log -->
+            <div class="control-section">
+                <h2>Status Log</h2>
+                <div class="log-container">
+                    <div id="statusLog" class="status-log">
+                        <div class="log-entry">Ready to connect...</div>
+                    </div>
+                    <button id="clearLogButton" class="clear-button">Clear Log</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load Paho MQTT library -->
+    <script src="https://unpkg.com/paho-mqtt@1.1.0/paho-mqtt.js"></script>
+    <script>
+        // Check if Paho loaded successfully
+        window.addEventListener('load', function() {
+            if (typeof Paho === 'undefined') {
+                console.error('Paho MQTT library failed to load');
+                document.body.innerHTML += '<div style="color: red; padding: 20px; background: #ffe6e6; margin: 20px; border-radius: 5px;"><strong>Error:</strong> MQTT library failed to load. Please refresh the page.</div>';
+            } else {
+                console.log('Paho MQTT library loaded successfully');
+            }
+        });
+    </script>
+    <script type="module" src="./src/main.js"></script>
+</body>
+</html>
